@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚠️ WARNING: SYSTEM COMPROMISED ⚠️</title>
+	<!-- Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-YOURIDHERE"></script>
+	<script>
+  	window.dataLayer = window.dataLayer || [];
+  	function gtag(){dataLayer.push(arguments);}
+  	gtag('js', new Date());
+  	gtag('config', 'G-YOURIDHERE');
+</script>
+    <style>
+        /* BASE STYLES */
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: default;
+            overflow: hidden;
+            position: relative;
+        }
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            z-index: 1;
+        }
+        .screen.active {
+            display: flex;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #0f0;
+            animation: glitch 1s infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 #0f0, -2px 0 #f00; }
+            25% { text-shadow: -2px 0 #0f0, 2px 0 #f00; }
+            50% { text-shadow: 2px 0 #00f, -2px 0 #0f0; }
+            100% { text-shadow: -2px 0 #f00, 2px 0 #00f; }
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #111;
+            color: #0f0;
+        }
+        button:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+        #scaryGif {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            z-index: 999;
+        }
+        #mazeBlocks {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .block {
+            width: 80px;
+            height: 80px;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #0f0;
+        }
+        .block:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+        .virus {
+            position: absolute;
+            color: #f00;
+            font-size: 1.5rem;
+            animation: fall linear infinite;
+            z-index: 0;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+        #fakeCamera {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+        #locationText {
+            font-size: 1.2rem;
+            color: #f00;
+        }
+        #cameraCapture {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #capturedImage {
+            width: 300px;
+            height: 300px;
+            border: 5px solid #f00;
+            margin: 20px;
+            background-color: #222;
+            background-image: url('https://i.imgur.com/JRlP1zW.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: grayscale(100%) contrast(150%);
+        }
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        #fakeWinScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1002;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #countdown {
+            font-size: 5rem;
+            color: #f00;
+            margin: 20px;
+            text-shadow: 0 0 20px #f00;
+        }
+        .glitch-symbol {
+            position: absolute;
+            color: #0f0;
+            font-size: 2rem;
+            animation: glitch 0.5s infinite;
+        }
+        @keyframes glitch-bg {
+            0% { background-color: #000; }
+            50% { background-color: #111; }
+            100% { background-color: #000; }
+        }
+        .glitch-bg {
+            animation: glitch-bg 0.1s infinite;
+        }
+        #loadingScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1003;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #loadingText {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #0f0;
+            min-height: 100px;
+            text-align: left;
+            width: 80%;
+            white-space: pre-wrap;
+        }
+        #loadingBarContainer {
+            width: 80%;
+            height: 30px;
+            background-color: #111;
+            border: 2px solid #0f0;
+        }
+        #loadingBar {
+            height: 100%;
+            width: 0%;
+            background-color: #0f0;
+            transition: width 0.1s;
+        }
+        .typing {
+            border-right: 2px solid #0f0;
+            animation: blink 0.75s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #0f0; }
+        }
+        .binary-rain {
+            position: absolute;
+            color: #0f0;
+            opacity: 0.3;
+            font-size: 1rem;
+            animation: fall linear infinite;
+            z-index: 0;
+        }
+        #faceDetection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1004;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #faceOutline {
+            width: 200px;
+            height: 300px;
+            border: 3px dashed #f00;
+            position: absolute;
+            display: none;
+        }
+        #winScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1005;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #winGift {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 20px;
+        }
+        .horror-text {
+            font-size: 1.8rem;
+            color: #f00;
+            text-shadow: 0 0 10px #f00;
+            margin: 10px 0;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: text-appear 2s forwards;
+        }
+        @keyframes text-appear {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .blood-text {
+            color: #f00;
+            text-shadow: 0 0 5px #f00;
+            animation: blood-drip 3s infinite;
+        }
+        @keyframes blood-drip {
+            0% { text-shadow: 0 0 5px #f00; }
+            50% { text-shadow: 0 5px 10px #f00; }
+            100% { text-shadow: 0 0 5px #f00; }
+        }
+        .coward-text {
+            font-size: 1.5rem;
+            color: #f00;
+            margin: 15px 0;
+            animation: blood-drip 2s infinite;
+        }
+        #redirectCountdown {
+            font-size: 1.2rem;
+            color: #0f0;
+            margin-top: 30px;
+            text-shadow: 0 0 5px #0f0;
+        }
+        
+        /* NEW INTENSE ANIMATIONS */
+        .blood-drip {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .drip {
+            position: absolute;
+            width: 2px;
+            background-color: #f00;
+            animation: drip-fall 5s linear forwards;
+            transform-origin: top;
+        }
+        @keyframes drip-fall {
+            0% { height: 0; opacity: 0; }
+            10% { opacity: 1; }
+            100% { height: 100vh; opacity: 0.8; }
+        }
+        .blood-splat {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #f00;
+            border-radius: 50%;
+            opacity: 0;
+            animation: splat-appear 3s forwards;
+            z-index: 9998;
+        }
+        @keyframes splat-appear {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+        .breach-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 0%, #f00 150%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9997;
+            animation: breach-pulse 3s ease-out forwards;
+        }
+        @keyframes breach-pulse {
+            0% { transform: scale(0.1); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .face-scan {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(255,0,0,0.1) 100%);
+            z-index: 9996;
+            display: none;
+        }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #0f0;
+            box-shadow: 0 0 10px #0f0;
+            animation: scan-move 3s linear infinite;
+            z-index: 9997;
+        }
+        @keyframes scan-move {
+            0% { top: 0; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .distortion {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 50 -25"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9995;
+            animation: distort 5s linear infinite;
+        }
+        @keyframes distort {
+            0% { opacity: 0; transform: scale(1); }
+            20% { opacity: 0.1; }
+            40% { opacity: 0.3; transform: scale(1.02); }
+            60% { opacity: 0.1; }
+            80% { opacity: 0.2; transform: scale(0.98); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+        .static-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="5" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9994;
+            mix-blend-mode: screen;
+        }
+        .blood-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 50 -25"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9993;
+            animation: blood-pulse 10s infinite;
+        }
+        @keyframes blood-pulse {
+            0% { opacity: 0; }
+            50% { opacity: 0.05; }
+            100% { opacity: 0; }
+        }
+.thank-you-message {
+        color: #ccc;
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 20px auto;
+        line-height: 1.6;
+    }
+    
+    .social-links {
+        margin: 30px 0;
+    }
+    
+    .social-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .social-buttons button {
+        background-color: #333;
+        color: #fff;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .social-buttons button:hover {
+        background-color: #0f0;
+        color: #000;
+    }
+
+    .countdown-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(0,0,0,0.7);
+        border: 2px solid #f00;
+        padding: 10px 15px;
+        border-radius: 5px;
+        z-index: 9999;
+        display: none;
+    }
+    
+    .countdown-text {
+        color: #0f0;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    </style>
+</head>
+<body>
+    <!-- Falling Viruses -->
+    <div id="viruses"></div>
+    <div id="binaryRain"></div>
+
+    <!-- New Intense Effects -->
+    <div class="blood-drip" id="bloodDrip"></div>
+    <div class="breach-effect" id="breachEffect"></div>
+    <div class="face-scan" id="faceScan">
+        <div class="scan-line"></div>
+    </div>
+    <div class="distortion"></div>
+    <div class="static-overlay"></div>
+    <div class="blood-overlay"></div>
+
+    <!-- Flash Effect -->
+    <div class="flash" id="flash"></div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <h1>INITIALIZING SYSTEM...</h1>
+        <div id="loadingText"></div>
+        <div id="loadingBarContainer">
+            <div id="loadingBar"></div>
+        </div>
+    </div>
+
+    <!-- Face Detection Overlay -->
+    <div id="faceDetection">
+        <h1>FACE DETECTION ACTIVE</h1>
+        <p>Please remain still while we analyze your features...</p>
+        <div id="faceOutline"></div>
+    </div>
+
+    <!-- Screen 1: Initial Challenge -->
+    <div class="screen active" id="screen1">
+        <h1>ONLY THE FEARLESS DARE TO CONTINUE.<br>DO YOU?</h1>
+        <div class="buttons">
+            <button id="yesBtn">✅ YES</button>
+            <button id="noBtn">❌ NO</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: If "NO" is clicked -->
+    <div class="screen" id="screen2">
+        <h1>COWARDS ARE NOT WELCOME HERE...<br>TRY AGAIN.</h1>
+        <div class="buttons">
+            <button id="backBtn">✅ YES</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Jump Scare -->
+    <img id="scaryGif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExODl3a2RkNHJ2b2s0bjR1Y3ViejRtNzNuNGQ0c3ltYzVoeGF0ZHpkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XvaKOCskRTtXG/giphy.gif">
+    <audio id="scarySound" src="https://www.myinstants.com/en/instant/scare-sound-7338.mp3"></audio>
+
+    <!-- Screen 4: Prank Reveal -->
+    <div class="screen" id="screen3">
+        <h1>THAT WAS JUST A PRANK...<br>OR WAS IT?</h1>
+        <p>Wanna try something harder?</p>
+        <div class="buttons">
+            <button id="restartBtn">✅ YES</button>
+            <button id="leaveBtn">❌ NO</button>
+        </div>
+    </div>
+
+    <!-- Screen 5: Coward Screen -->
+    <div class="screen" id="screen5">
+        <h1>PATHETIC...</h1>
+        <p class="coward-text">You had a chance to prove yourself...</p>
+        <p class="coward-text">But you chose weakness...</p>
+        <p class="coward-text">Maybe next time you'll be braver...</p>
+        <div id="redirectCountdown">Redirecting in 3 seconds...</div>
+    </div>
+
+    <!-- Screen 6: Maze Game -->
+    <div class="screen" id="screen4">
+        <h1>CHOOSE THE RIGHT BLOCK TO WIN. OTHERWISE PREPARE FOR THE RESULT</h1>
+        <p id="locationText">Loading your location...</p>
+        <div id="mazeBlocks">
+            <div class="block" id="block1">1</div>
+            <div class="block" id="block2">2</div>
+            <div class="block" id="block3">3</div>
+        </div>
+    </div>
+
+    <!-- Fake Win Screen -->
+    <div id="fakeWinScreen">
+        <h1>CONGRATULATIONS!</h1>
+        <p>You survived... or did you?</p>
+        <div id="countdown">10</div>
+    </div>
+
+    <!-- Real Win Screen -->
+    <div id="winScreen">
+        <h1 class="blood-text">YOU HAVE PROVEN YOUR COURAGE</h1>
+        <div class="horror-text">Against all horrors...</div>
+        <div class="horror-text">You stood your ground...</div>
+        <div class="horror-text">Few have made it this far...</div>
+	<div class="horror-text">Wait --- Redirecting Shortly....</div>
+
+        <div id="winGift"></div>
+        <p class="blood-text">Your reward: Eternal bragging rights</p>
+
+        <button id="finalRestartBtn">PLAY AGAIN?</button>
+    </div>
+
+    <!-- Camera Capture Screen -->
+    <div id="cameraCapture">
+        <h1>YOUR CAMERA HAS BEEN ACTIVATED</h1>
+        <p>Smile for the survivors' log...</p>
+        <div id="capturedImage">
+	<img id="scaryGif" 	src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExODl3a2RkNHJ2b2s0bjR1Y3ViejRtNzNuNGQ0c3ltYzVoeGF0ZHpkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XvaKOCskRTtXG/giphy.gif"></div>
+        <p>IMAGE CAPTURED AND ARCHIVED</p>
+ 	<b>Please Click on CONTINUE</b>
+	<br></br>
+
+        <button id="continueAfterCapture">CONTINUE</button>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="whisperSound" src="https://assets.mixkit.co/sfx/preview/mixkit-creepy-whisper-566.mp3" loop></audio>
+    <audio id="staticSound" src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2798.mp3"></audio>
+    <audio id="shutterSound" src="https://assets.mixkit.co/sfx/preview/mixkit-camera-shutter-click-1124.mp3"></audio>
+    <audio id="countdownSound" src="https://assets.mixkit.co/sfx/preview/mixkit-clock-countdown-bleeps-916.mp3"></audio>
+    <audio id="typingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-1386.mp3" loop></audio>
+    <audio id="errorSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-error-alert-1125.mp3"></audio>
+    <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+    <audio id="heartbeatSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-heartbeat-757.mp3" loop></audio>
+    <audio id="breachSound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
+
+<div class="screen" id="thankYouScreen">
+    <h1 style="color: #0f0; text-shadow: 0 0 10px #0f0; animation: none;">THANK YOU FOR PLAYING!</h1>
+    
+    <div class="thank-you-message">
+        <p>Whether you won or lost, you faced the challenge!</p>
+        <p>This was just a harmless prank - no systems were actually accessed.</p>
+        <p>Hope you enjoyed the experience! 😊</p>
+    </div>
+   
+    <button id="playAgainBtn" style="margin-top: 30px;">PLAY AGAIN?</button>
+</div>
+
+    <script>
+        // Elements
+        const screens = document.querySelectorAll('.screen');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const backBtn = document.getElementById('backBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const leaveBtn = document.getElementById('leaveBtn');
+        const scaryGif = document.getElementById('scaryGif');
+        const scarySound = document.getElementById('scarySound');
+        const whisperSound = document.getElementById('whisperSound');
+        const staticSound = document.getElementById('staticSound');
+        const shutterSound = document.getElementById('shutterSound');
+        const countdownSound = document.getElementById('countdownSound');
+        const typingSound = document.getElementById('typingSound');
+        const errorSound = document.getElementById('errorSound');
+        const winSound = document.getElementById('winSound');
+        const heartbeatSound = document.getElementById('heartbeatSound');
+        const breachSound = document.getElementById('breachSound');
+        const locationText = document.getElementById('locationText');
+        const cameraCapture = document.getElementById('cameraCapture');
+        const continueAfterCapture = document.getElementById('continueAfterCapture');
+        const flash = document.getElementById('flash');
+        const fakeWinScreen = document.getElementById('fakeWinScreen');
+        const winScreen = document.getElementById('winScreen');
+        const countdownElement = document.getElementById('countdown');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingText = document.getElementById('loadingText');
+        const loadingBar = document.getElementById('loadingBar');
+        const virusesContainer = document.getElementById('viruses');
+        const binaryRainContainer = document.getElementById('binaryRain');
+        const faceDetection = document.getElementById('faceDetection');
+        const faceOutline = document.getElementById('faceOutline');
+        const finalRestartBtn = document.getElementById('finalRestartBtn');
+        const redirectCountdown = document.getElementById('redirectCountdown');
+        const bloodDrip = document.getElementById('bloodDrip');
+        const breachEffect = document.getElementById('breachEffect');
+        const faceScan = document.getElementById('faceScan');
+
+        // Game Variables
+        let userLocation = "Unknown";
+        let loadingComplete = false;
+
+        // Create falling viruses
+        function createViruses() {
+            setInterval(() => {
+                const virus = document.createElement('div');
+                virus.className = 'virus';
+                virus.textContent = '⚠️ VIRUS';
+                virus.style.left = Math.random() * 100 + 'vw';
+                virus.style.animationDuration = Math.random() * 3 + 2 + 's';
+                virusesContainer.appendChild(virus);
+
+                setTimeout(() => {
+                    virus.remove();
+                }, 5000);
+            }, 300);
+        }
+
+        // Create binary rain effect
+        function createBinaryRain() {
+            setInterval(() => {
+                const binary = document.createElement('div');
+                binary.className = 'binary-rain';
+                binary.textContent = Math.random() > 0.5 ? '1' : '0';
+                binary.style.left = Math.random() * 100 + 'vw';
+                binary.style.animationDuration = Math.random() * 5 + 3 + 's';
+                binaryRainContainer.appendChild(binary);
+
+                setTimeout(() => {
+                    binary.remove();
+                }, 8000);
+            }, 100);
+        }
+
+        // Create blood drip effect
+        function createBloodDrips() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const drip = document.createElement('div');
+                    drip.className = 'drip';
+                    drip.style.left = Math.random() * 100 + 'vw';
+                    drip.style.height = Math.random() * 20 + 'px';
+                    drip.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    drip.style.animationDelay = (Math.random() * 2) + 's';
+                    bloodDrip.appendChild(drip);
+                    
+                    // Add blood splat at random positions
+                    if (Math.random() > 0.7) {
+                        const splat = document.createElement('div');
+                        splat.className = 'blood-splat';
+                        splat.style.left = Math.random() * 90 + 5 + 'vw';
+                        splat.style.top = Math.random() * 90 + 5 + 'vh';
+                        splat.style.width = (Math.random() * 100 + 50) + 'px';
+                        splat.style.height = splat.style.width;
+                        splat.style.animationDelay = (Math.random() * 2) + 's';
+                        document.body.appendChild(splat);
+                        
+                        setTimeout(() => {
+                            splat.remove();
+                        }, 3000);
+                    }
+                    
+                    setTimeout(() => {
+                        drip.remove();
+                    }, 5000);
+                }, i * 300);
+            }
+        }
+
+        // Create system breach effect
+        function createBreachEffect() {
+            breachEffect.style.display = 'block';
+            breachSound.play();
+            
+            setTimeout(() => {
+                breachEffect.style.display = 'none';
+            }, 3000);
+        }
+
+        // Simulate face scan
+        function simulateFaceScan() {
+            faceScan.style.display = 'block';
+            heartbeatSound.play();
+            
+            // Add multiple scan lines
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = 'scan-line';
+                    line.style.animationDelay = (i * 0.5) + 's';
+                    faceScan.appendChild(line);
+                    
+                    setTimeout(() => {
+                        line.remove();
+                    }, 3000);
+                }, i * 500);
+            }
+            
+            setTimeout(() => {
+                faceScan.style.display = 'none';
+                heartbeatSound.pause();
+                startLoadingSequence();
+            }, 3000);
+        }
+
+        // Get user location (approximate)
+     function getUserLocation() {
+  // First try precise GPS location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        userLocation = `Lat: ${position.coords.latitude.toFixed(2)}, Long: ${position.coords.longitude.toFixed(2)}`;
+        locationText.textContent = `Location: ${userLocation}`;
+      },
+      (error) => {
+        // If GPS denied, try IP-based location
+        fetch('https://ipapi.co/json/')
+          .then(response => response.json())
+          .then(data => {
+            userLocation = `${data.city}, ${data.country_name}`;
+            locationText.textContent = `Approximate location: ${userLocation}`;
+          })
+          .catch(() => {
+            userLocation = "Unknown";
+            locationText.textContent = "Location unavailable";
+          });
+      }
+    );
+  } else {
+    // If no geolocation support, try IP-based
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(data => {
+        userLocation = `${data.city}, ${data.country_name}`;
+        locationText.textContent = `Approximate location: ${userLocation}`;
+      })
+      .catch(() => {
+        userLocation = "Unknown";
+        locationText.textContent = "Location unavailable";
+      });
+  }
+}
+
+        // Switch screens
+        function showScreen(id) {
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // Simulate camera capture
+        function capturePhoto() {
+            cameraCapture.style.display = "flex";
+            
+            // Flash effect
+            flash.style.opacity = 0.9;
+            setTimeout(() => {
+                flash.style.transition = "opacity 0.3s";
+                flash.style.opacity = 0;
+            }, 50);
+            
+            // Play shutter sound
+            shutterSound.play();
+            
+            // Vibrate if on mobile
+            if (navigator.vibrate) navigator.vibrate(500);
+        }
+
+        // Fake face detection
+        function simulateFaceDetection() {
+            faceDetection.style.display = "flex";
+            faceOutline.style.display = "block";
+            
+            // Random movement of face outline
+            const moveInterval = setInterval(() => {
+                faceOutline.style.left = (Math.random() * 60 + 20) + '%';
+                faceOutline.style.top = (Math.random() * 40 + 20) + '%';
+            }, 800);
+            
+            setTimeout(() => {
+                clearInterval(moveInterval);
+                faceDetection.style.display = "none";
+                capturePhoto();
+            }, 3000);
+        }
+
+        // Show winning screen
+        function showWinScreen() {
+            winScreen.style.display = "flex";
+            winSound.play();
+            
+            // Animate horror texts one by one
+            const horrorTexts = document.querySelectorAll('.horror-text');
+            horrorTexts.forEach((text, index) => {
+                setTimeout(() => {
+                    text.style.animation = 'text-appear 2s forwards';
+                }, index * 1500);
+            });
+            
+            // Show gift after all texts
+            setTimeout(() => {
+                document.getElementById('winGift').style.opacity = '1';
+            }, horrorTexts.length * 1500);
+        }
+
+        // Fake victory countdown
+        function startFakeWin() {
+            fakeWinScreen.style.display = "flex";
+            let count = 10;
+            countdownElement.textContent = count;
+            
+            // Add glitch symbols randomly
+            const glitchInterval = setInterval(() => {
+                const symbol = document.createElement('div');
+                symbol.className = 'glitch-symbol';
+                symbol.textContent = String.fromCharCode(Math.floor(Math.random() * 1000));
+                symbol.style.left = Math.random() * 100 + 'vw';
+                symbol.style.top = Math.random() * 100 + 'vh';
+                fakeWinScreen.appendChild(symbol);
+                
+                setTimeout(() => {
+                    symbol.remove();
+                }, 1000);
+            }, 300);
+            
+            // Countdown
+            const countdown = setInterval(() => {
+                count--;
+                countdownElement.textContent = count;
+                countdownSound.play();
+                
+                // Glitch effect intensifies
+                if (count < 5) {
+                    document.body.classList.add('glitch-bg');
+                }
+                
+                if (count <= 0) {
+                    clearInterval(countdown);
+                    clearInterval(glitchInterval);
+                    document.body.classList.remove('glitch-bg');
+                    
+                    // Final jump scare
+                    scaryGif.style.display = "block";
+                    scarySound.play();
+                    if (navigator.vibrate) navigator.vibrate(2000);
+                    
+                    setTimeout(() => {
+                        scaryGif.style.display = "none";
+                        fakeWinScreen.style.display = "none";
+                        showWinScreen();
+                    }, 3000);
+                }
+            }, 1000);
+        }
+
+        // Creepy loading sequence - now completes in 3 seconds
+        function startLoadingSequence() {
+            loadingScreen.style.display = "flex";
+            typingSound.play();
+            
+            const messages = [
+                "> Connecting to dark network...",
+                "> Bypassing firewalls...",
+                "> Accessing location data...",
+                "> I see where you're from...",
+                "> Scanning device information...",
+                "> Your IP: 192.168." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255),
+                "> Detecting operating system...",
+                "> Analyzing browser history...",
+                "> Initializing scare protocol...",
+                "> Establishing backdoor connection...",
+                "> WARNING: SYSTEM COMPROMISED",
+                "> They are watching you...",
+                "> Don't turn around..."
+            ];
+            
+            let progress = 0;
+            let messageIndex = 0;
+            let currentMessages = "";
+            let typing = false;
+            
+            // Start progress bar animation
+            const progressInterval = setInterval(() => {
+                progress += 2;
+                loadingBar.style.width = `${Math.min(progress, 100)}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    loadingComplete = true;
+                    typingSound.pause();
+                    
+                    // Add final message
+                    currentMessages += "> Connection established.\n> Welcome to the nightmare.\n\n";
+                    loadingText.textContent = currentMessages;
+                    
+                    setTimeout(() => {
+                        loadingScreen.style.display = "none";
+                        showHorrorAnimation();
+                    }, 1000);
+                }
+            }, 60); // Update every 60ms for ~3 second completion
+            
+            // Message display system
+            const messageInterval = setInterval(() => {
+                if (messageIndex < messages.length) {
+                    currentMessages += messages[messageIndex] + "\n";
+                    loadingText.textContent = currentMessages;
+                    loadingText.scrollTop = loadingText.scrollHeight;
+                    messageIndex++;
+                    
+                    // Occasionally play static sound
+                    if (Math.random() > 0.7) {
+                        staticSound.currentTime = 0;
+                        staticSound.play();
+                    }
+                    
+                    // Occasionally show error
+                    if (Math.random() > 0.8) {
+                        errorSound.play();
+                        currentMessages += "! ERROR: SYSTEM BREACH DETECTED !\n";
+                    }
+                } else {
+                    clearInterval(messageInterval);
+                }
+            }, 200);
+        }
+
+        // Show horror animation after loading
+        function showHorrorAnimation() {
+            const horrorContainer = document.createElement('div');
+            horrorContainer.style.position = 'fixed';
+            horrorContainer.style.top = '0';
+            horrorContainer.style.left = '0';
+            horrorContainer.style.width = '100%';
+            horrorContainer.style.height = '100%';
+            horrorContainer.style.backgroundColor = '#000';
+            horrorContainer.style.zIndex = '1006';
+            horrorContainer.style.display = 'flex';
+            horrorContainer.style.flexDirection = 'column';
+            horrorContainer.style.justifyContent = 'center';
+            horrorContainer.style.alignItems = 'center';
+            document.body.appendChild(horrorContainer);
+            
+            const bloodText1 = document.createElement('div');
+            bloodText1.className = 'blood-text';
+            bloodText1.style.fontSize = '2rem';
+            bloodText1.textContent = 'YOU SHOULDN\'T HAVE COME HERE...';
+            bloodText1.style.opacity = '0';
+            horrorContainer.appendChild(bloodText1);
+            
+            setTimeout(() => {
+                bloodText1.style.transition = 'opacity 2s';
+                bloodText1.style.opacity = '1';
+                
+                setTimeout(() => {
+                    const bloodText2 = document.createElement('div');
+                    bloodText2.className = 'blood-text';
+                    bloodText2.style.fontSize = '1.8rem';
+                    bloodText2.textContent = 'THEY SEE YOU NOW...';
+                    bloodText2.style.opacity = '0';
+                    horrorContainer.appendChild(bloodText2);
+                    
+                    setTimeout(() => {
+                        bloodText2.style.transition = 'opacity 2s';
+                        bloodText2.style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            const bloodText3 = document.createElement('div');
+                            bloodText3.className = 'blood-text';
+                            bloodText3.style.fontSize = '2.2rem';
+                            bloodText3.textContent = 'THERE\'S NO ESCAPE...';
+                            bloodText3.style.opacity = '0';
+                            horrorContainer.appendChild(bloodText3);
+                            
+                            setTimeout(() => {
+                                bloodText3.style.transition = 'opacity 2s';
+                                bloodText3.style.opacity = '1';
+                                
+                                setTimeout(() => {
+                                    horrorContainer.remove();
+                                    scaryGif.style.display = "block";
+                                    scarySound.play();
+                                    if (navigator.vibrate) navigator.vibrate(1000);
+                                    
+                                    setTimeout(() => {
+                                        scaryGif.style.display = "none";
+                                        showScreen('screen3');
+                                    }, 3000);
+                                }, 2000);
+                            }, 50);
+                        }, 2000);
+                    }, 50);
+                }, 2000);
+            }, 50);
+        }
+
+        // Screen 1: Initial Challenge
+        yesBtn.addEventListener('click', () => {
+            // Start intense animations
+            createBloodDrips();
+            createBreachEffect();
+            simulateFaceScan();
+            
+            // Disable buttons during animation
+            yesBtn.disabled = true;
+            noBtn.disabled = true;
+            
+            // Show loading screen after scan completes
+            setTimeout(() => {
+                showScreen('screen1');
+                startLoadingSequence();
+            }, 3500);
+        });
+        
+        noBtn.addEventListener('click', () => showScreen('screen2'));
+        backBtn.addEventListener('click', () => showScreen('screen1'));
+
+        // Screen 3: Prank Reveal
+        restartBtn.addEventListener('click', () => {
+            showScreen('screen4');
+            getUserLocation();
+        });
+        leaveBtn.addEventListener('click', () => {
+            showScreen('screen5');
+            document.body.style.animation = 'glitch-bg 0.05s infinite';
+            errorSound.play();
+            
+            // Countdown before redirect
+            let count = 3;
+            const countdownInterval = setInterval(() => {
+                count--;
+                redirectCountdown.textContent = `Redirecting in ${count} seconds...`;
+                
+                if (count <= 0) {
+                    clearInterval(countdownInterval);
+                    document.body.style.animation = '';
+                    window.location.href = "https://www.youtube.com/watch?v=N0OgzJkVH68&list=RDN0OgzJkVH68&start_radio=1";
+                }
+            }, 2500);
+        });
+
+        // Screen 4: Maze Game
+        block1.addEventListener('click', () => {
+            simulateFaceDetection();
+        });
+        block2.addEventListener('click', () => {
+            simulateFaceDetection();
+        });
+        block3.addEventListener('click', () => {
+            startFakeWin();
+        });
+
+        // Continue after camera capture
+        continueAfterCapture.addEventListener('click', () => {
+            cameraCapture.style.display = "none";
+            showScreen('screen1');
+        });
+
+        // Final restart button
+        finalRestartBtn.addEventListener('click', () => {
+            winScreen.style.display = "none";
+            showScreen('screen1');
+        });
+
+        // Start the animations
+        createViruses();
+        createBinaryRain();
+        
+        // Easter egg - whisper sound on mouse move after 10 seconds
+        setTimeout(() => {
+            document.addEventListener('mousemove', () => {
+                if (!whisperSound.playing && Math.random() > 0.7) {
+                    whisperSound.currentTime = 0;
+                    whisperSound.play();
+                }
+            });
+        }, 10000);
+// Track page views and interactions
+// Enhanced Tracking Code
+window.addEventListener('DOMContentLoaded', () => {
+  // Initialize visit tracking
+  try {
+    const visitCount = localStorage.getItem('visitCount') 
+      ? parseInt(localStorage.getItem('visitCount')) + 1 
+      : 1;
+    
+    localStorage.setItem('visitCount', visitCount);
+    localStorage.setItem('visitedBefore', 'true');
+    localStorage.setItem('firstVisit', localStorage.getItem('firstVisit') || new Date().toISOString());
+
+    // Track visit type
+    gtag('event', visitCount > 1 ? 'return_visit' : 'first_visit', {
+      'visit_count': visitCount,
+      'first_visit_date': localStorage.getItem('firstVisit')
+    });
+
+  } catch (e) {
+    console.error('LocalStorage error:', e);
+  }
+
+  // Enhanced button tracking
+  document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => {
+      gtag('event', 'button_click', {
+        'event_category': 'engagement',
+        'event_label': button.id || button.textContent.trim().substring(0, 50),
+        'interaction_type': 'click'
+      });
+    });
+  });
+
+  // Screen view tracking
+  const trackScreenView = (screenId) => {
+    gtag('event', 'screen_view', {
+      'screen_name': screenId,
+      'engagement_time': 1 // Required for GA4
+    });
+  };
+
+  // Track initial screen
+  trackScreenView('initial_screen');
+
+  // Enhanced timing tracking
+  let startTime = Date.now();
+  window.addEventListener('beforeunload', () => {
+    const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
+    
+    gtag('event', 'timing_complete', {
+      'event_category': 'engagement',
+      'event_label': 'session_duration',
+      'value': timeSpentSeconds,
+      'interactions': document.querySelectorAll('button:active').length
+    });
+
+    // Track exit screen
+    const activeScreen = document.querySelector('.screen.active');
+    if (activeScreen) {
+      trackScreenView(activeScreen.id || 'unknown_screen');
+    }
+  });
+
+  // Track scroll depth (optional)
+  let maxScroll = 0;
+  window.addEventListener('scroll', () => {
+    const currentScroll = (window.scrollY / document.body.scrollHeight) * 100;
+    if (currentScroll > maxScroll) {
+      maxScroll = currentScroll;
+      if (maxScroll % 25 === 0) { // Report at 25%, 50%, 75%, 100%
+        gtag('event', 'scroll_depth', {
+          'percent_scrolled': maxScroll
+        });
+      }
+    }
+  });
+});
+
+// Add early disclaimer
+const disclaimer = document.createElement('div');
+disclaimer.innerHTML = `
+  <div style="position:fixed; top:0; left:0; width:100%; background:black; color:red; padding:10px; z-index:9999; text-align:center;">
+    WARNING: This is a simulated horror experience. JUST AN PRANK. No real system access occurs.
+    <button id="exitBtn" style="margin-left:20px;">EXIT IMMEDIATELY</button>
+  </div>
+`;
+document.body.prepend(disclaimer);
+document.getElementById('exitBtn').addEventListener('click', () => window.location.href = 'https://www.youtube.com/watch?v=N0OgzJkVH68&list=RDN0OgzJkVH68&start_radio=1');
+
+// Enhanced analytics consent
+if (!localStorage.getItem('analyticsConsent')) {
+  // Show consent modal
+}
+
+const thankYouScreen = document.getElementById('thankYouScreen');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    
+    // Modify your redirect function (for losers)
+    function redirectLoser() {
+        showScreen('thankYouScreen');
+        
+        // Change the message for losers
+        document.querySelector('.thank-you-message').innerHTML = `
+            <p>You survived the experience!</p>
+            <p>This was just a harmless prank - no systems were actually accessed.</p>
+            <p>Want to try again and see if you can win this time? 😉</p>
+        `;
+        
+        // Play a friendly sound
+        winSound.play();
+    }
+    
+    // Modify your win function
+    function showWinScreen() {
+        // First show the original win screen
+        winScreen.style.display = "flex";
+        winSound.play();
+        
+        // After 8 seconds, show thank you screen
+        setTimeout(() => {
+            winScreen.style.display = "none";
+            showScreen('thankYouScreen');
+            
+            // Special message for winners
+            document.querySelector('.thank-you-message').innerHTML = `
+                <p>CONGRATULATIONS, BRAVE SOUL! 🎉</p>
+                <p>You've officially survived the ultimate test of courage!</p>
+                <p>This was just a harmless prank - your system was never in danger.</p>
+                <p>Feel free to share your victory with friends!</p>
+            `;
+        }, 8000);
+    }
+    
+    // Update your leave button to use redirectLoser instead of direct redirect
+    leaveBtn.addEventListener('click', () => {
+        showScreen('screen5');
+        document.body.style.animation = 'glitch-bg 0.05s infinite';
+        errorSound.play();
+        
+        let count = 3;
+        const countdownInterval = setInterval(() => {
+            count--;
+            redirectCountdown.textContent = `Redirecting in ${count} seconds...`;
+            
+            if (count <= 0) {
+                clearInterval(countdownInterval);
+                document.body.style.animation = '';
+                redirectLoser(); // Changed from direct redirect
+            }
+        }, 1000);
+    });
+    
+    // Play again functionality
+    playAgainBtn.addEventListener('click', () => {
+        showScreen('screen1');
+    });
+    
+    // Update the continueAfterCapture to go to thank you screen
+    continueAfterCapture.addEventListener('click', () => {
+        cameraCapture.style.display = "none";
+        showScreen('thankYouScreen');
+    });
+
+ let countdownActive = false;
+    const globalCountdown = document.getElementById('globalCountdown');
+    const countdownNumber = document.getElementById('countdownNumber');
+
+    // Add this function with your other functions
+    function startGlobalCountdown(seconds, redirectUrl) {
+        if (countdownActive) return;
+        countdownActive = true;
+        
+        globalCountdown.style.display = 'block';
+        let count = seconds;
+        countdownNumber.textContent = count;
+        
+        const countdownInterval = setInterval(() => {
+            count--;
+            countdownNumber.textContent = count;
+            
+            if (count <= 0) {
+                clearInterval(countdownInterval);
+                globalCountdown.style.display = 'none';
+                countdownActive = false;
+                window.location.href = redirectUrl;
+            }
+        }, 1000);
+    }
+
+    // Modify your leaveBtn event listener to use the new countdown
+    leaveBtn.addEventListener('click', () => {
+        showScreen('screen5');
+        document.body.style.animation = 'glitch-bg 0.05s infinite';
+        errorSound.play();
+        
+        // Start the visible countdown
+        startGlobalCountdown(5, "https://www.youtube.com/watch?v=N0OgzJkVH68");
+    });
+
+    // Modify your redirectLoser function to use the new countdown
+    function redirectLoser() {
+        showScreen('thankYouScreen');
+        document.querySelector('.thank-you-message').innerHTML = `
+            <p>You survived the experience!</p>
+            <p>This was just a harmless prank - no systems were actually accessed.</p>
+            <p>You'll be redirected shortly...</p>
+        `;
+        winSound.play();
+        
+        // Start the visible countdown
+        startGlobalCountdown(5, "https://www.youtube.com/watch?v=N0OgzJkVH68");
+    }
+
+    </script>
+<div class="countdown-container" id="globalCountdown">
+    <p class="countdown-text">Redirecting in <span id="countdownNumber">5</span> seconds...</p>
+</div>
+</body>
+</html>
