@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚠️ WARNING: SYSTEM COMPROMISED ⚠️</title>
-	<!-- Google Analytics -->
-	<!-- Google tag (gtag.js) -->
+	<!-- Google tag (gtag.js) - Should be in HEAD -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ76PCVXCP"></script>
 	<script>
   	window.dataLayer = window.dataLayer || [];
   	function gtag(){dataLayer.push(arguments);}
- 	 gtag('js', new Date());
-
-  	gtag('config', 'G-TJ76PCVXCP');
+  	gtag('js', new Date());
+  
+ 	 // Enable automatic pageview and enhanced measurement
+ 	 gtag('config', 'G-TJ76PCVXCP', {
+    	'debug_mode': true, // Remove in production
+    	'anonymize_ip': false, // If you need precise location
+    	'allow_google_signals': true // Enable demographics
+  	});
 	</script>
     <style>
         /* BASE STYLES */
@@ -625,10 +629,10 @@
 
         <button id="continueAfterCapture">CONTINUE</button>
     </div>
-  <div id="disclaimer" style="position:fixed; top:0; left:0; width:100%; background:black; color:red; padding:10px; z-index:9999; text-align:center;">
-        WARNING: Simulated horror experience. Nothing to Worry About -- Just a PRANK..
-        <button id="exitBtn" style="margin-left:10px; padding:5px 10px;">EXIT NOW</button>
-    </div>
+ <div id="disclaimer" style="position:fixed; top:0; left:0; width:100%; background:black; color:red; padding:10px; z-index:9999; text-align:center;">
+    WARNING: Simulated horror experience. Nothing to Worry About -- Just a PRANK..
+    <button id="exitBtn" style="margin-left:10px; padding:5px 10px;">EXIT NOW</button>
+</div>
 
 
     <!-- Audio Elements -->
@@ -831,6 +835,12 @@
       .then(data => {
         userLocation = `${data.city}, ${data.country_name}`;
         locationText.textContent = `Approximate location: ${userLocation}`;
+ 	gtag('event', 'ip_location', {
+              'city': data.city,
+              'region': data.region,
+              'country': data.country_name,
+              'ip': data.ip
+            });
       })
       .catch(() => {
         userLocation = "Unknown";
@@ -1270,6 +1280,27 @@ window.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
+
+function removeDisclaimer() {
+    const disclaimer = document.getElementById('disclaimer');
+    if (disclaimer) {
+        disclaimer.remove();
+    }
+}
+
+// Screen 1: Initial Challenge
+yesBtn.addEventListener('click', () => {
+    removeDisclaimer(); // Add this line
+    // Rest of your existing code...
+    createBloodDrips();
+    createBreachEffect();
+    // etc...
+});
+
+noBtn.addEventListener('click', () => {
+    removeDisclaimer(); // Add this line
+    showScreen('screen2');
+});
 // Enhanced analytics consent
 if (!localStorage.getItem('analyticsConsent')) {
   const consentModal = document.createElement('div');
